@@ -17,6 +17,7 @@ router.post('/api/users', checkSchema(createUserValidationSchema), createUserHan
 
 router.post('/api/users/login', isNotAuthed, passport.authenticate('local'), (req, res) => {
     console.log(`User: ${req.user}`);
+    console.log(`UserID: ${req.user._id}`);
     console.log(req.sessionID);
     return res.status(200).send({ msg: "succsesful" });
 })

@@ -21,3 +21,21 @@ export const createUserValidationSchema = {
         notEmpty: true
     }
 }
+
+export const createTeamValidationSchema = {
+    teamName: {
+        notEmpty: true,
+        isString: true
+    },
+    teamLeader: {
+        notEmpty: true,
+    },
+    teamMembers: {
+        notEmpty: true,
+        isArray: true
+    },
+    teamProjects: {
+        notEmpty: true,
+        isArray: true
+    }
+}
