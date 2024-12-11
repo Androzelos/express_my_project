@@ -10,7 +10,10 @@ const UserSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.String,
         required: true
     },
-    displayName: mongoose.Schema.Types.String
+    displayName: mongoose.Schema.Types.String,
+    teams: {
+        type: [mongoose.Schema.Types.ObjectId],
+    }
 })
 
 export const User = mongoose.model("User", UserSchema);
