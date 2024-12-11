@@ -7,6 +7,9 @@ export const createTeamHandler = async (req, res) => {
     if (!result.isEmpty()) return res.status(400).send(result.array());
 
     const data = matchedData(req);
+
+    console.log(data);
+
     const members = data.teamMembers.map(member => member.trim());
 
     const leader = await User.findById(data.teamLeader);
@@ -75,4 +78,28 @@ export const deleteUserFromTeam = async (req, res) => {
     await User.updateOne( { _id: userId }, { $pull: { teams: teamId }});
 
     return res.status(200).send("User deleted from team");
+}
+
+export const deleteTeam = async (req, res) => {
+    try {
+        const { teamId } = req.body;
+
+        const team = await Team.findById(teamId);
+        if(!team){
+            return res.status(400).send("Team not found");
+        }
+
+        team.teamMembers.map(async (member) => {
+            if(!member) return res.status(400).send("User not found");
+            await User.updateOne( { _id: member }, { $pull: { teams: teamId }});
+            console.log(`User ${member} deleted from team`);
+        });
+
+        await Team.deleteOne({ _id: teamId });
+
+        return res.status(200).send("Team deleted");
+    } catch (error) {
+        console.log(error);
+        return res.status(400).send("An error occurred while deleting a team");
+    }
 }
