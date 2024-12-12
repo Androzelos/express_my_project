@@ -7,7 +7,6 @@ export const createTeamHandler = async (req, res) => {
     if (!result.isEmpty()) return res.status(400).send(result.array());
 
     const data = matchedData(req);
-
     console.log(data);
 
     const members = data.teamMembers.map(member => member.trim());
@@ -25,7 +24,9 @@ export const createTeamHandler = async (req, res) => {
         console.log(`Members id: ${member}`);
     }
 
+    data.teamMembers.push(data.teamLeader);
     const newTeam = new Team(data);
+    
     try {
         const savedTeam = await newTeam.save();
     
@@ -34,6 +35,8 @@ export const createTeamHandler = async (req, res) => {
             await User.updateOne({ _id: user }, { $push: { teams: savedTeam._id } })
 
         }
+
+        await User.updateOne({ _id: leader }, { $push: { teams: savedTeam._id } })
 
         return res.status(201).send(savedTeam);
     } catch (err) {
