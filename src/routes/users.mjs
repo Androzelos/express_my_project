@@ -30,6 +30,8 @@ router.get('/api/users/logout', isAuthed, (req, res) => {
     });
 })
 
+router.pos
+
 router.get('/api/users/me', (req, res) => {
     console.log(req.sessionID);
     return res.status(200).send(req.user);
