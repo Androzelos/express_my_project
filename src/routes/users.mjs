@@ -1,7 +1,7 @@
 import { response, Router } from "express";
 import { checkSchema } from "express-validator";
 import { createUserValidationSchema } from "../utils/validationSchema.mjs" 
-import { createUserHandler } from "../handlers/users.mjs";
+import { createUserHandler, forgotPasswordHandler } from "../handlers/users.mjs";
 import { isAuthed } from "../utils/helpers.mjs";
 import { isNotAuthed } from "../utils/helpers.mjs";
 import passport from "passport";
@@ -30,11 +30,10 @@ router.get('/api/users/logout', isAuthed, (req, res) => {
     });
 })
 
-router.pos
-
-router.get('/api/users/me', (req, res) => {
-    console.log(req.sessionID);
-    return res.status(200).send(req.user);
-})
+router.post('/api/users/forgotPassword', isNotAuthed, forgotPasswordHandler);
+router.get('/api/users/forgotPassword', isNotAuthed, (req, res) => {
+    const { query: { token } } = req;
+    return res.status(200).send({ msg: "Password reset successful" });
+});
 
 export default router;

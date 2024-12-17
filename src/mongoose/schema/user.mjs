@@ -6,6 +6,11 @@ const UserSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    email: {
+        type: mongoose.Schema.Types.String,
+        required: true,
+        unique: true
+    },
     password: {
         type: mongoose.Schema.Types.String,
         required: true
@@ -13,7 +18,9 @@ const UserSchema = new mongoose.Schema({
     displayName: mongoose.Schema.Types.String,
     teams: {
         type: [mongoose.Schema.Types.ObjectId],
-    }
+    },
+    resetPasswordToken: String,
+    resetPasswordExpires: Date
 })
 
 export const User = mongoose.model("User", UserSchema);
