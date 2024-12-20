@@ -4,6 +4,7 @@ import { hashPassword } from '../utils/helpers.mjs';
 import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 import exp from 'constants';
+import { log } from 'console';
 
 export const createUserHandler = async (req, res) => {
     const result = validationResult(req);
@@ -34,6 +35,8 @@ export const forgotPasswordHandler = async (req, res) => {
             });
         }
 
+        console.log(`User ${user._id} requests password reset`);
+
         // Generate reset token (valid for 1 hour)
         const resetToken = crypto.randomBytes(32).toString('hex');
         user.resetPasswordToken = resetToken;
@@ -41,7 +44,7 @@ export const forgotPasswordHandler = async (req, res) => {
         await user.save();
 
         // Create reset URL
-        const resetUrl = `${process.env.FRONTEND_URL}/api/users/forgotPassword?token=${resetToken}`;
+        const resetUrl = `${process.env.LOCALHOST_URL}/resetPassword/forgotPassword.html?token=${resetToken}`;
 
         // Configure email
         const transporter = nodemailer.createTransport({

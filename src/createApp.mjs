@@ -32,13 +32,14 @@ export function createApp() {
     app.use(routes);
 
     app.get('/', (req, res) => {
-        console.log(req);
+        console.log(req.session);
         return res.status(200).send({ msg: "Welcome to my site" });
     })
 
     app.get('/api/auth', (req, res) => {
+        console.log(req.user);
         return req.user
-            ? res.send(req.user)
+            ? res.send("User is logged to console for debuging purposes")
             : res.sendStatus(401);
     })
 

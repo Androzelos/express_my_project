@@ -4,6 +4,7 @@ import { createUserValidationSchema } from "../utils/validationSchema.mjs"
 import { createUserHandler, forgotPasswordHandler } from "../handlers/users.mjs";
 import { isAuthed } from "../utils/helpers.mjs";
 import { isNotAuthed } from "../utils/helpers.mjs";
+import { User } from "../mongoose/schema/user.mjs";
 import passport from "passport";
 import "../strategies/local-strategy.mjs";
 
@@ -31,8 +32,16 @@ router.get('/api/users/logout', isAuthed, (req, res) => {
 })
 
 router.post('/api/users/forgotPassword', isNotAuthed, forgotPasswordHandler);
-router.get('/api/users/forgotPassword', isNotAuthed, (req, res) => {
+router.get('/api/users/forgotPassword', isNotAuthed, async (req, res) => {
     const { query: { token } } = req;
+    const user = await User.findOne({ resetPasswordToken: token });
+
+    console.log(user);
+    console.log(token);
+
+    console.log(`User ${user._id} requests password reset`);
+    if(!user) return res.status(401).send({ msg: "Token does not exist or expired." });
+
     return res.status(200).send({ msg: "Password reset successful" });
 });
 
